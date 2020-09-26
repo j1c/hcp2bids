@@ -77,6 +77,7 @@ def get_data(
             if subjects not in all_subjects:
                 msg = f"{subjects} is not a valid subject number."
                 raise ValueError(msg)
+            subjects = [subjects]
         elif isinstance(subjects, list):
             invalid_subjects = []
             for subject in subjects:
@@ -99,13 +100,14 @@ def get_data(
         if verbose:
             print(f"Downloading Subject: {subject}...")
 
+        to_download = []
+
         # Diffusion
         contents = s3.list_objects(
             Bucket="hcp-openaccess",
             Prefix=f"{prefix}{subject}/unprocessed/3T/Diffusion/",
         ).get("Contents")
 
-        to_download = []
         for c in contents:
             fname = c.get("Key")
             if not any(exclude in fname for exclude in ["BIAS", "SBRef"]):
@@ -131,3 +133,6 @@ def get_data(
                 print(f"Downloading File: {filename}...")
 
             s3.download_file(Bucket=bucket, Key=key, Filename=str(filename))
+
+        if verbose:
+            print(f"Finished Downloading Subject: {subject}...")
