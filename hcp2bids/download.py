@@ -28,7 +28,6 @@ def get_data(
     output_path,
     subjects=None,
     prefix="HCP_1200/",
-    n_jobs=1,
     verbose=False,
     access_key_id=None,
     secret_access_key=None,
