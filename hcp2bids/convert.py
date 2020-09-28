@@ -29,16 +29,16 @@ def convert(input_path, output_path):
         raise ValueError(msg)
 
     # Make output path
-    output_path = Path(output_path)
-    if not output_path.is_dir():
-        output_path.mkdir(parents=True)
+    out_path = Path(output_path)
+    if not out_path.is_dir():
+        out_path.mkdir(parents=True)
 
     # Generate dataset_description.json
     data = dict(Name="hcp", BIDSVersion="1.4.0", DatasetType="raw")
-    with open(output_path / "dataset_description.json", "w") as f:
+    with open(out_path / "dataset_description.json", "w") as f:
         json.dump(data, f)
 
-    layout = BIDSLayout(output_path.absolute())
+    layout = BIDSLayout(out_path.absolute())
 
     # Iterate through each subject folder
     subject_folders = [x for x in in_path.iterdir() if x.is_dir()]
@@ -116,3 +116,6 @@ def convert(input_path, output_path):
         for folder in list(subject_folder.rglob("*"))[::-1]:
             folder.rmdir()
         subject_folder.rmdir()
+
+    if not input_path == output_path:
+        in_path.rmdir()
