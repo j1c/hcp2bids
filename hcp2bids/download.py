@@ -109,7 +109,9 @@ def get_data(
 
         for c in contents:
             fname = c.get("Key")
-            if not any(exclude in fname for exclude in ["BIAS", "SBRef"]):
+            if not any(
+                exclude in fname for exclude in ["BIAS", "SBRef", "LINKED_DATA"]
+            ):
                 to_download.append(fname)
 
         # T1w
@@ -120,7 +122,7 @@ def get_data(
 
         for c in contents:
             fname = c.get("Key")
-            if "T1w_MPR1" in fname:
+            if fname.endswith("T1w_MPR1.nii.gz"):
                 to_download.append(fname)
 
         for key in to_download:
