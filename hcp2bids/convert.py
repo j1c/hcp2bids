@@ -19,7 +19,7 @@ run_dict = dict(dir95="1", dir96="2", dir97="3")
 def _mkdir(layout, subject, modality):
     entities = dict(subject=subject, datatype=modality_dict[modality])
     dir_name = Path(layout.build_path(entities, dir_pattern, validate=False))
-    dir_name.mkdir(parents=True, exists_ok=True)
+    dir_name.mkdir(parents=True, exist_ok=True)
 
 
 def convert(input_path, output_path):
@@ -49,7 +49,9 @@ def convert(input_path, output_path):
         # 6 digit sub id in str form
         subject = subject_folder.name
 
-        modality_folders = [x for x in subject_folder.iterdir() if x.is_dir()]
+        modality_folders = [
+            x for x in (subject_folder / "unprocessed/3T/").iterdir() if x.is_dir()
+        ]
         for modality_folder in modality_folders:
             modality = modality_folder.name
 
@@ -59,27 +61,29 @@ def convert(input_path, output_path):
             if modality == "T1w_MPR1":
                 entities = dict(
                     subject=subject,
-                    datatype=modality,
+                    datatype=modality_dict[modality],
                     extension=".nii.gz",
                     suffix="T1w",
                 )
                 new_fname = layout.build_path(entities, pattern)
 
                 # Rename old files
-                old_fname = list(modality.iterdir())[0]
+                old_fname = list(modality_folder.iterdir())[0]
                 old_fname.rename(new_fname)
 
             elif modality == "Diffusion":
-                for fname in modality.iterdir():
-                    splits = fname.split(".")
+                for fname in modality_folder.iterdir():
+                    splits = fname.name.split(".")
                     extension = "." + splits[-1]  # Get extension
+                    if extension == ".gz":
+                        extension = ".nii.gz"
                     splits = splits[0].split("_")
                     direction = splits[-1]  # Direction. RL or LR
                     run = run_dict[splits[-2]]  # Run number
 
                     entities = dict(
                         subject=subject,
-                        datatype=modality,
+                        datatype=modality_dict[modality],
                         direction=direction,
                         run=run,
                         extension=extension,
@@ -106,5 +110,9 @@ def convert(input_path, output_path):
                         with open(layout.build_path(entities, pattern), "w") as f:
                             json.dump(sidecar, f)
 
+            # Remove all folders
             modality_folder.rmdir()
+
+        for folder in list(subject_folder.rglob("*"))[::-1]:
+            folder.rmdir()
         subject_folder.rmdir()
