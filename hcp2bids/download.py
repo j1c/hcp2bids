@@ -133,7 +133,11 @@ def get_data(
             if verbose:
                 print(f"Downloading File: {filename}...")
 
-            s3.download_file(Bucket=bucket, Key=key, Filename=str(filename))
+            if filename.exists():
+                if verbose:
+                    print(f"Skipping File: {filename}. Already exists...")
+            else:
+                s3.download_file(Bucket=bucket, Key=key, Filename=str(filename))
 
         if verbose:
             print(f"Finished Downloading Subject: {subject}...")
