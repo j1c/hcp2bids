@@ -1,4 +1,4 @@
 __version__ = "0.1.0"
 
 from .convert import convert
-from .download import download
+from .download import get_data
