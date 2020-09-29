@@ -1,13 +1,14 @@
 [tool.poetry]
 name = "hcp2bids"
 version = "0.1.0"
-description = ""
+description = "For downloading and converting HCP1200 data into BIDS spec."
 authors = ["j1c <jaewonc78@gmail.com>"]
+license = "MIT"
+include = ["./hcp2bids/subjects/*.txt"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pybids = "^0.12.1"
-jupyterlab = "^2.2.8"
+pybids = ">=0.9.3"
 boto3 = "^1.15.1"
 
 [tool.poetry.dev-dependencies]

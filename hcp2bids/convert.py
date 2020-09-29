@@ -7,7 +7,7 @@ from bids import BIDSLayout
 bids.config.set_option("extension_initial_dot", True)
 
 pattern = (
-    "sub-{subject}/{datatype<anat|dwi>}/sub-{subject}"
+    "sub-{subject}[/ses-{session}]/{datatype<anat|dwi>}/sub-{subject}"
     "[_ses-{session}][_acq-{acquisition}][_dir-{direction}][_run-{run}]"
     "_{suffix<T[12]w|dwi>}{extension<.bval|.bvec|.json|.nii.gz>|.nii.gz}"
 )
@@ -22,7 +22,7 @@ def _mkdir(layout, subject, modality):
     dir_name.mkdir(parents=True, exist_ok=True)
 
 
-def convert(input_path, output_path):
+def convert(input_path, output_path, include_ses=False):
     in_path = Path(input_path)
     if not in_path.is_dir():
         msg = f"{input_path} is not a valid directory."
@@ -65,6 +65,8 @@ def convert(input_path, output_path):
                     extension=".nii.gz",
                     suffix="T1w",
                 )
+                if include_ses:
+                    entities["session"] = "1"
                 new_fname = layout.build_path(entities, pattern)
 
                 # Rename old files
@@ -89,6 +91,9 @@ def convert(input_path, output_path):
                         extension=extension,
                         suffix="dwi",
                     )
+                    if include_ses:
+                        entities["session"] = "1"
+
                     new_fname = layout.build_path(entities, pattern)
                     Path(fname).rename(new_fname)
 
