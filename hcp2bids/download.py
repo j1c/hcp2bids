@@ -71,6 +71,10 @@ def get_data(
     all_subjects = get_all_subjects(bucket, prefix, s3)
 
     if subjects is not None:
+        # Convert to string first if int
+        if isinstance(subjects, int):
+            subjects = str(subjects)
+
         # Check all input subjects are valid
         if isinstance(subjects, str):
             if subjects not in all_subjects:
