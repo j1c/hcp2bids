@@ -9,7 +9,7 @@ include = ["./hcp2bids/subjects/*.txt"]
 [tool.poetry.dependencies]
 python = "^3.6"
 pybids = ">=0.9.3"
-boto3 = "^1.15.1"
+boto3 = "^1.12"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
