@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hcp2bids"
-version = "0.1.0"
+version = "0.2.0"
 description = "For downloading and converting HCP1200 data into BIDS spec."
 authors = ["j1c <jaewonc78@gmail.com>"]
 license = "MIT"
