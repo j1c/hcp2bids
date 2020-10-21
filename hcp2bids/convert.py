@@ -16,8 +16,10 @@ modality_dict = dict(Diffusion="dwi", T1w_MPR1="anat")
 run_dict = dict(dir95="1", dir96="2", dir97="3")
 
 
-def _mkdir(layout, subject, modality):
+def _mkdir(layout, subject, modality, include_ses):
     entities = dict(subject=subject, datatype=modality_dict[modality])
+    if include_ses:
+        entities["session"] = "1"
     dir_name = Path(layout.build_path(entities, dir_pattern, validate=False))
     dir_name.mkdir(parents=True, exist_ok=True)
 
@@ -56,7 +58,7 @@ def convert(input_path, output_path, include_ses=False):
             modality = modality_folder.name
 
             # Make bids output folders
-            _mkdir(layout, subject, modality)
+            _mkdir(layout, subject, modality, include_ses)
 
             if modality == "T1w_MPR1":
                 entities = dict(
