@@ -32,6 +32,7 @@ def get_data(
     access_key_id=None,
     secret_access_key=None,
     profile_name=None,
+    exclude_list=None,
 ):
     """
     Do not hard code access key and secret key.
@@ -113,8 +114,12 @@ def get_data(
 
         for c in contents:
             fname = c.get("Key")
+            if exclude_list is not None:
+                exclude_list += ["BIAS", "SBRef", "LINKED_DATA"]
+            else:
+                exclude_list = ["BIAS", "SBRef", "LINKED_DATA"]
             if not any(
-                exclude in fname for exclude in ["BIAS", "SBRef", "LINKED_DATA"]
+                exclude in fname for exclude in exclude_list
             ):
                 to_download.append(fname)
 
