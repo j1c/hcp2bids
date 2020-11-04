@@ -8,7 +8,7 @@ include = ["./hcp2bids/subjects/*.txt"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pybids = ">=0.9.3"
+pybids = ">=0.11.0"
 boto3 = "^1.12"
 
 [tool.poetry.dev-dependencies]
